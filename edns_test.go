@@ -89,6 +89,38 @@ func TestOPTTtl(t *testing.T) {
 		t.Errorf("CO bit should be non-zero")
 	}
 
+	// DE (Delegation Extensions) flag tests follow the same pattern as DO and CO tests
+	// verify that invoking SetDe() sets DE=1
+	e.SetDe()
+	if !e.De() {
+		t.Errorf("DE bit should be non-zero")
+	}
+	// verify that using SetCo(true) works when DE=1
+	e.SetDe(true)
+	if !e.De() {
+		t.Errorf("DE bit should still be non-zero")
+	}
+	// verify that we can use SetDe(false) to set DE=0
+	e.SetDe(false)
+	if e.De() {
+		t.Errorf("DE bit should be zero")
+	}
+	// verify that if we call SetDe(false) when DE=0 that it is unchanged
+	e.SetDe(false)
+	if e.De() {
+		t.Errorf("DE bit should still be zero")
+	}
+	// verify that using SetDe(true) works for DE=0
+	e.SetDe(true)
+	if !e.De() {
+		t.Errorf("DE bit should be non-zero")
+	}
+	// verify that using SetDe() works for DE=1
+	e.SetDe()
+	if !e.De() {
+		t.Errorf("DE bit should be non-zero")
+	}
+
 	if e.Version() != 0 {
 		t.Errorf("version should be non-zero")
 	}

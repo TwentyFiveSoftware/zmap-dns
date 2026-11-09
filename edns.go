@@ -30,6 +30,7 @@ const (
 	EDNS0LOCALEND     = 0xFFFE  // End of range reserved for local/experimental use (See RFC 6891)
 	_DO               = 1 << 15 // DNSSEC OK
 	_CO               = 1 << 14 // Compact Answers OK
+	_DE               = 1 << 13 // Delegation Extensions
 )
 
 // makeDataOpt is used to unpack the EDNS0 option(s) from a message.
@@ -226,6 +227,26 @@ func (rr *OPT) SetCo(co ...bool) {
 		}
 	} else {
 		rr.Hdr.Ttl |= _CO
+	}
+}
+
+// De returns the value of the DE (Delegation Extensions) bit.
+func (rr *OPT) De() bool {
+	return rr.Hdr.Ttl&_DE == _DE
+}
+
+// SetDe sets the DE (Delegation Extensions) bit.
+// If we pass an argument, set the DE bit to that value.
+// It is possible to pass 2 or more arguments, but they will be ignored.
+func (rr *OPT) SetDe(de ...bool) {
+	if len(de) == 1 {
+		if de[0] {
+			rr.Hdr.Ttl |= _DE
+		} else {
+			rr.Hdr.Ttl &^= _DE
+		}
+	} else {
+		rr.Hdr.Ttl |= _DE
 	}
 }
 
